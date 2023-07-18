@@ -1,9 +1,10 @@
 import { useContext, useLayoutEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import Button from "../components/UI/Button";
 import { ExpensesContext } from "../store/expenses-context";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
 function ManageExpenses({ route, navigation }) {
     const expensesCtx = useContext(ExpensesContext);
@@ -44,18 +45,7 @@ function ManageExpenses({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.buttons}>
-                <Button
-                    mode="flat"
-                    onPress={cancelHandler}
-                    style={styles.button}
-                >
-                    Cancel
-                </Button>
-                <Button onPress={confirmHandler} style={styles.button}>
-                    {isEditing ? "Update" : "Add"}
-                </Button>
-            </View>
+            <ExpenseForm onCancel={cancelHandler} submitButtonLabel={isEditing ? 'Updated' : 'Add'}/>
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton
@@ -77,15 +67,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 24,
         backgroundColor: GlobalStyles.colors.primary800,
-    },
-    buttons: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "ce",
-    },
-    button: {
-        width: 120,
-        marginHorizontal: 8,
     },
     deleteContainer: {
         marginTop: 16,
