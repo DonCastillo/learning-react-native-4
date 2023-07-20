@@ -2,12 +2,13 @@ import { StyleSheet, Text, View } from "react-native";
 import Input from "./Input";
 import Button from "../UI/Button";
 import { useState } from "react";
+import { getFormattedDate } from "../../util/date";
 
-function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
+function ExpenseForm({onCancel, onSubmit, submitButtonLabel, defaultValues}) {
     const [inputValues, setInputValues] = useState({
-        amount: "",
-        date: "",
-        description: "",
+        amount: defaultValues ? defaultValues.amount.toString() : "",
+        date: defaultValues ? getFormattedDate(defaultValues.date) : "",
+        description: defaultValues ? defaultValues.description : "",
     });
 
     function inputChangeHandler(inputIdentifier, enteredValue) {
@@ -20,7 +21,12 @@ function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
     }
 
     function submitHandler() {
-
+        const expenseData = {
+            amount: +inputValues.amount,
+            date: new Date(inputValues.date),
+            description: inputValues.description
+        }
+        onSubmit(expenseData)
     }
 
 
@@ -34,7 +40,7 @@ function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
                     textInputConfig={{
                         keyboardType: "decimal-pad",
                         onChangeText: inputChangeHandler.bind(this, "amount"),
-                        value: inputValues["amount"],
+                        value: inputValues.amount,
                     }}
                 />
                 <Input
@@ -44,7 +50,7 @@ function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
                         placeholder: "YYYY-MM-DD",
                         maxLength: 10,
                         onChangeText: inputChangeHandler.bind(this, "date"),
-                        value: inputValues["date"],
+                        value: inputValues.date,
                     }}
                 />
             </View>
@@ -54,7 +60,7 @@ function ExpenseForm({onCancel, onSubmit, submitButtonLabel}) {
                 textInputConfig={{
                     multiline: true,
                     onChangeText: inputChangeHandler.bind(this, "description"),
-                    value: inputValues["description"],
+                    value: inputValues.description,
                 }}
             />
 
